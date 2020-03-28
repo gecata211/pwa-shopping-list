@@ -71,6 +71,6 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 ### Testing PWA doesn't work in development
 ### To test manifest and service worker do this
 
-npm i serve -g
-npm run build
-serve -s build
+npm i serve -g <br />
+npm run build <br />
+serve -s build  <br />
