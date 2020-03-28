@@ -66,3 +66,11 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+### Testing PWA doesn't work in development
+### To test manifest and service worker do this
+
+npm i serve -g
+npm run build
+serve -s build
