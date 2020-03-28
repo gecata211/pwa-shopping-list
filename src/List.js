@@ -1,5 +1,8 @@
 import React from "react";
 import AddNewItem from "./AddNewItem";
+import fire from "./fire";
+import db from "./fire";
+
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -10,28 +13,30 @@ class List extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
   }
+  componentWillMount() {
+    db.collection("Lists")
+      .doc(this.props.id)
+      .onSnapshot(snapshot => {
+        let list = snapshot.data();
 
-  componentDidMount() {
-    this.setState({
-      list: this.props.getList(this.props.id)
-    });
+        list["id"] = this.props.id;
 
-    // this._asyncRequest = this.props
-    //   .getList(this.props.id)
-    //   .then(response => {
-    //     this._asyncRequest = null;
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     this.setState({
-    //       list: data
-    //     });
-    //   });
+        this.setState({
+          list: list
+        });
+      });
   }
   componentWillUnmount() {
     if (this._asyncRequest) {
       this._asyncRequest.cancel();
     }
+  }
+
+  getAllLists() {
+    return fire
+      .database()
+      .ref("Lists")
+      .once("value", snapshot => {});
   }
   handleChange(index, e) {
     let list = Object.assign({}, this.state.list);
@@ -40,13 +45,22 @@ class List extends React.Component {
     this.setState({
       list: list
     });
+
+    db.collection("Lists")
+      .doc(this.props.id)
+      .update(list);
   }
   toggle() {
     this.setState({ show: !this.state.show });
   }
 
-  deleteItem(itemIndex) {
-    this.props.deleteItem(itemIndex, this.state.list.id);
+  deleteItem(index) {
+    let listToUpdate = this.state.list;
+    listToUpdate.items.splice(index, 1);
+
+    db.collection("Lists")
+      .doc(this.state.list.id)
+      .update(listToUpdate);
   }
 
   render() {
@@ -76,7 +90,7 @@ class List extends React.Component {
 
                 <a
                   style={{ marginLeft: "15px", color: "red" }}
-                  onClick={itemIndex => this.deleteItem(itemIndex)}
+                  onClick={() => this.deleteItem(index)}
                 >
                   Delete
                 </a>
@@ -92,12 +106,7 @@ class List extends React.Component {
           <a onClick={this.toggle.bind(this)}>Add item</a>
           <div>
             {this.state.show ? (
-              <AddNewItem
-                currentListId={this.state.list.id}
-                addListItem={(listId, newItem) =>
-                  this.props.addListItem(listId, newItem)
-                }
-              />
+              <AddNewItem currentList={this.state.list} />
             ) : null}
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, navigate } from "@reach/router";
+import db from "./fire";
 
 class AddNewList extends React.Component {
   constructor(props) {
@@ -13,6 +13,16 @@ class AddNewList extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  addNewList(name) {
+    let newList = {
+      name: name,
+      items: []
+    };
+
+    db.collection("Lists")
+      .add(newList)
+      .catch(err => console.error(err));
+  }
   handleChange(event) {
     this.setState({
       newList: {
@@ -23,11 +33,10 @@ class AddNewList extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     if (this.state.newList.name) {
-      this.props.addNewList(this.state.newList.name);
+      this.addNewList(this.state.newList.name);
       this.setState({
         newList: {}
       });
-      navigate("/");
     }
   }
 

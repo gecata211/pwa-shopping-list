@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, navigate } from "@reach/router";
+import { Link } from "@reach/router";
 import AddNewList from "./AddNewList";
+import db from "./fire";
 
 class Lists extends React.Component {
   constructor(props) {
@@ -11,25 +12,31 @@ class Lists extends React.Component {
       show: false
     };
   }
-
-  componentDidMount() {
-    this.setState({
-      lists: this.props.lists
+  getAllLists() {
+    let lists = [];
+    db.collection("Lists").onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === "added") {
+          let item = change.doc.data();
+          item["id"] = change.doc.id;
+          lists.push(item);
+        }
+        if (change.type === "removed") {
+        }
+      });
+      this.setState({
+        lists: lists
+      });
     });
-
-    // this._asyncRequest = this.props
-    //   .getList(this.props.id)
-    //   .then(response => {
-    //     this._asyncRequest = null;
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     this.setState({
-    //       list: data
-    //     });
-    //   });
   }
-
+  componentWillMount() {
+    this.getAllLists();
+  }
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.cancel();
+    }
+  }
   toggle() {
     this.setState({ show: !this.state.show });
   }
@@ -42,7 +49,7 @@ class Lists extends React.Component {
           <div>
             <h2>{list.name}</h2>
             <div>
-              <div>Items: {list.items.length}</div>
+              <div>Items: {list.items ? list.items.length : 0}</div>
             </div>
           </div>
         </Link>

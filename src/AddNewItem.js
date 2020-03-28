@@ -1,18 +1,29 @@
 import React from "react";
-import { Link, navigate } from "@reach/router";
+import db from "./fire";
 
 class AddNewList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      newItem: {}
+      newItem: {
+        name: ""
+      }
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
+  addListItem(listId, newItem) {
+    let listToUpdate = this.props.currentList;
+    listToUpdate.items.push({
+      name: newItem,
+      checked: false
+    });
+    db.collection("Lists")
+      .doc(listToUpdate.id)
+      .update(listToUpdate);
+  }
   handleChange(event) {
     this.setState({
       newItem: {
@@ -23,10 +34,13 @@ class AddNewList extends React.Component {
   }
   handleSubmit(event) {
     event.preventDefault();
+
     if (this.state.newItem.name) {
-      this.props.addListItem(this.props.currentListId, this.state.newItem.name);
+      this.addListItem(this.props.currentListId, this.state.newItem.name);
       this.setState({
-        newItem: {}
+        newItem: {
+          name: ""
+        }
       });
     }
   }
@@ -36,7 +50,12 @@ class AddNewList extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <div>
             <label htmlFor="item">Item</label>
-            <input name="item" type="text" onChange={this.handleChange}></input>
+            <input
+              name="item"
+              type="text"
+              onChange={this.handleChange}
+              value={this.state.newItem.name}
+            ></input>
           </div>
           <div>
             <input type="submit" value="Create"></input>
