@@ -49,8 +49,9 @@ class AddNewList extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <div>
-            <label htmlFor="item">Item</label>
+            <label className="input-label" htmlFor="item">Item</label>
             <input
+              className="input-field"
               name="item"
               type="text"
               onChange={this.handleChange}
@@ -58,7 +59,7 @@ class AddNewList extends React.Component {
             ></input>
           </div>
           <div>
-            <input type="submit" value="Create"></input>
+            <input className="btn btn-secondary" type="submit" value="Create"></input>
           </div>
         </form>
       </div>

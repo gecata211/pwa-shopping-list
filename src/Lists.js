@@ -45,11 +45,11 @@ class Lists extends React.Component {
     let lists = [];
     this.state.lists.forEach(list => {
       lists.push(
-        <Link to={list.id + ""} key={list.id}>
+        <Link to={list.id + ""} key={list.id} className="list-item">
           <div>
             <h2>{list.name}</h2>
             <div>
-              <div>Items: {list.items ? list.items.length : 0}</div>
+              <div className="list-item--count">Items: {list.items ? list.items.length : 0}</div>
             </div>
           </div>
         </Link>
@@ -58,9 +58,10 @@ class Lists extends React.Component {
 
     return (
       <div>
-        <div>{lists}</div>
+        <h1 className="list-title">Todo's</h1>
+        <div className="list-wrapper">{lists}</div>
         <div>
-          <button onClick={this.toggle.bind(this)}>Create new List</button>
+          <button className="btn btn-primary" onClick={this.toggle.bind(this)}>Create new List</button>
         </div>
         <div>
           {" "}
