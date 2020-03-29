@@ -80,7 +80,7 @@ class List extends React.Component {
               }}
               key={index}
             >
-              <h4>{item.name}</h4>
+              <h4 className="item-name">{item.name}</h4>
               <div>
                 <input
                   type="checkbox"
@@ -101,9 +101,9 @@ class List extends React.Component {
       }
       return (
         <div style={{ textAlign: "center", maxWidth: "400px", margin: "auto" }}>
-          <h2>{this.state.list.name}</h2>
-          <form>{items}</form>
-          <a onClick={this.toggle.bind(this)}>Add item</a>
+          <h2 className="list-title">{this.state.list.name}</h2>
+          <form className="item-name--wrapper">{items}</form>
+          <a className="btn btn-primary btn-add-item" onClick={this.toggle.bind(this)}>Add item</a>
           <div>
             {this.state.show ? (
               <AddNewItem currentList={this.state.list} />
